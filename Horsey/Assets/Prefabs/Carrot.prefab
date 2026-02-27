@@ -147,4 +147,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f01e81c285b2ecf4ebb8c4fcd6acf985, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  staminaToGive: 0
+  staminaToGive: 20
+  bounceState: 0
+  bounceAmount: 0.25
+  bounceSpeed: 1

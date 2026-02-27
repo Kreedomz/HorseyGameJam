@@ -5,7 +5,7 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     const int MIN_STAMINA = 0;
-    const int MAX_STAMINA = 5;
+    const int MAX_STAMINA = 100;
 
     [Header("Stamina Settings")]
     // Set the stamina of the player to the max on game start
