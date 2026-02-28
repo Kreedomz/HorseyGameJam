@@ -39,6 +39,17 @@ public class Snake : MonoBehaviour
     {
         foreach (LayerMask layerMask in layersToIgnore)
         {
+            // MAKE THE FUNCTION IGNORE THE LAYER THAT THE SNAKE IS SUPPOSED TO IGNORE SO IT CAN ONLY CHANGE DIRECTION FROM OTHER LAYERS LIKE THE TILEMAP DETECTION
+            // MAKE THE FUNCTION IGNORE THE LAYER THAT THE SNAKE IS SUPPOSED TO IGNORE SO IT CAN ONLY CHANGE DIRECTION FROM OTHER LAYERS LIKE THE TILEMAP DETECTION
+            // MAKE THE FUNCTION IGNORE THE LAYER THAT THE SNAKE IS SUPPOSED TO IGNORE SO IT CAN ONLY CHANGE DIRECTION FROM OTHER LAYERS LIKE THE TILEMAP DETECTION
+            // MAKE THE FUNCTION IGNORE THE LAYER THAT THE SNAKE IS SUPPOSED TO IGNORE SO IT CAN ONLY CHANGE DIRECTION FROM OTHER LAYERS LIKE THE TILEMAP DETECTION
+            // MAKE THE FUNCTION IGNORE THE LAYER THAT THE SNAKE IS SUPPOSED TO IGNORE SO IT CAN ONLY CHANGE DIRECTION FROM OTHER LAYERS LIKE THE TILEMAP DETECTION
+            // MAKE THE FUNCTION IGNORE THE LAYER THAT THE SNAKE IS SUPPOSED TO IGNORE SO IT CAN ONLY CHANGE DIRECTION FROM OTHER LAYERS LIKE THE TILEMAP DETECTION
+            // MAKE THE FUNCTION IGNORE THE LAYER THAT THE SNAKE IS SUPPOSED TO IGNORE SO IT CAN ONLY CHANGE DIRECTION FROM OTHER LAYERS LIKE THE TILEMAP DETECTION
+            // MAKE THE FUNCTION IGNORE THE LAYER THAT THE SNAKE IS SUPPOSED TO IGNORE SO IT CAN ONLY CHANGE DIRECTION FROM OTHER LAYERS LIKE THE TILEMAP DETECTION
+            // MAKE THE FUNCTION IGNORE THE LAYER THAT THE SNAKE IS SUPPOSED TO IGNORE SO IT CAN ONLY CHANGE DIRECTION FROM OTHER LAYERS LIKE THE TILEMAP DETECTION
+            // MAKE THE FUNCTION IGNORE THE LAYER THAT THE SNAKE IS SUPPOSED TO IGNORE SO IT CAN ONLY CHANGE DIRECTION FROM OTHER LAYERS LIKE THE TILEMAP DETECTION
+
             if (gameObjectCheck.layer == layerMask.value)
             {
                 return false; 
@@ -130,7 +141,7 @@ public class Snake : MonoBehaviour
         foreach(Collider2D collider in colliderA)
         {
             // If the current iteration has found the SNAKE, ignore and continue to the next iteration
-            if (colliderA.Length == 1 && colliderA[0].gameObject == this.gameObject)
+            if (collider.gameObject == this.gameObject)
             {
                 continue;
             }
@@ -142,7 +153,7 @@ public class Snake : MonoBehaviour
         foreach (Collider2D collider in colliderB)
         {
             // If the current iteration has found the SNAKE, ignore and continue to the next iteration
-            if (colliderB.Length == 1 && colliderB[0].gameObject == this.gameObject)
+            if (collider.gameObject == this.gameObject)
             {
                 continue;
             }
