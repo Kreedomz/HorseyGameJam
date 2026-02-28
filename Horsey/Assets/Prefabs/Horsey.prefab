@@ -129,8 +129,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a1f015e9e6ad3f42ad91140a4d360a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentStamina: 100
+  currentStamina: 5
+  drainStaminaPerSecond: 1
   moveSpeed: 5
+  jumpSpeed: 7.5
+  jumpKey: 32
 --- !u!58 &5618618156591610463
 CircleCollider2D:
   m_ObjectHideFlags: 0
