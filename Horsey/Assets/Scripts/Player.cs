@@ -15,6 +15,7 @@ public class Player : MonoBehaviour
     [SerializeField] float currentStamina = MAX_STAMINA;
     // How much player stamina is drained per second
     [SerializeField] float drainStaminaPerSecond = 1.0f;
+    [SerializeField] float jumpingStaminaDrain = 5.0f; // How much stamina to drain when player jumps
 
     [Header("Movement Settings")]
     [SerializeField] float moveSpeed = 5.0f;
@@ -48,6 +49,8 @@ public class Player : MonoBehaviour
         HandleJumping();
 
         CameraFollow();
+
+        HandleGameOver();
     }
 
     void HandleMovement()
@@ -81,6 +84,8 @@ public class Player : MonoBehaviour
                 Vector2 jumpingVector = new Vector2(rb.linearVelocity.x, jumpSpeed);
 
                 rb.linearVelocity = jumpingVector;
+
+                currentStamina -= jumpingStaminaDrain; // Drain the stamina of the player when they jump
             }
         }
     }
@@ -101,6 +106,16 @@ public class Player : MonoBehaviour
         }
     }
 
+    void HandleGameOver()
+    {
+        // If player stamina reached the minimum stamina allowed
+        if (currentStamina <= MIN_STAMINA)
+        {
+            Time.timeScale = 0.0f; // Freeze the time
+            print("Player lost all stamina and died");
+        }
+    }
+
     IEnumerator DrainStamina()
     {
         while (currentStamina > MIN_STAMINA)
@@ -115,7 +130,6 @@ public class Player : MonoBehaviour
             {
                 currentStamina = 0;
             }
-
 
             // Wait for a couple seconds
             yield return new WaitForEndOfFrame();

@@ -7,6 +7,7 @@ public class UI : MonoBehaviour
     [Header("UI")]
     [SerializeField] Image staminaForegroundImage;
     [SerializeField] TextMeshProUGUI staminaText;
+
     Player player;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
