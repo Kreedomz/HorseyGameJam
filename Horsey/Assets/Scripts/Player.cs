@@ -27,6 +27,11 @@ public class Player : MonoBehaviour
     Rigidbody2D rb;
 
     IEnumerator drainStaminaCoroutine;
+    [Header("Game Over Settings")]
+    [SerializeField] GameObject gameOverPanel;
+
+    // True when the player has died / triggered game over
+    bool isDead = false;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -108,12 +113,24 @@ public class Player : MonoBehaviour
 
     void HandleGameOver()
     {
-        // If player stamina reached the minimum stamina allowed
-        if (currentStamina <= MIN_STAMINA)
+        // If player stamina dropped below zero, trigger death
+        if (currentStamina < MIN_STAMINA)
         {
-            Time.timeScale = 0.0f; // Freeze the time
-            print("Player lost all stamina and died");
+            TriggerGameOver();
         }
+    }
+
+    public void TriggerGameOver()
+    {
+        if (isDead) return;
+        isDead = true;
+
+        Time.timeScale = 0.0f; // Freeze the time
+
+        if (gameOverPanel != null)
+            gameOverPanel.SetActive(true);
+
+        Debug.Log("Game Over");
     }
 
     IEnumerator DrainStamina()
@@ -199,6 +216,14 @@ public class Player : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        // If we hit an object tagged "Win", show game over panel
+        if (collision.gameObject.CompareTag("Win"))
+        {
+            TriggerGameOver();
+            Destroy(collision.gameObject);
+            return;
+        }
+
         // Check if the player/horse collides with another object, in this case (an enemy = snake)
         if (collision.gameObject.GetComponent<Snake>() != null)
         {
