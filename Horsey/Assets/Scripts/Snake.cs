@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.UIElements;
 
 public class Snake : MonoBehaviour
 {
@@ -10,13 +11,15 @@ public class Snake : MonoBehaviour
     }
 
     [Header("Ground Check Settings")]
-    [SerializeField] LayerMask[] layersToIgnore;
+    [SerializeField] LayerMask layersToIgnore;
     [SerializeField] float groundCheckDetection = 0.15f;
 
     [Header("Movement Settings")]
     [SerializeField] MovingDirection movingDirection = MovingDirection.Left; // Start the snake moving left by default on creation
-    [SerializeField] float moveSpeed = 5.0f;
-
+    [SerializeField] float moveSpeed = 2.0f;
+    [SerializeField] float flipMovementDirectionTimeDelay = 0.25f; // How long to wait before the snake being able to change movement direciton again (IN SECONDS)
+    float currentFlipMovementDirectionCooldown = 0.0f;
+    
     Rigidbody2D rb;
 
     Vector3 leftFootCollider;
@@ -28,6 +31,8 @@ public class Snake : MonoBehaviour
     CircleCollider2D circleCollider;
 
 
+
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -37,23 +42,10 @@ public class Snake : MonoBehaviour
 
     bool CheckGameObjectLayerIsAllowed(GameObject gameObjectCheck)
     {
-        foreach (LayerMask layerMask in layersToIgnore)
+        // Checking if the game object's layer can be found in the LayerMask of layers to ignore
+        if ((layersToIgnore.value & (1 << gameObjectCheck.layer)) != 0)
         {
-            // MAKE THE FUNCTION IGNORE THE LAYER THAT THE SNAKE IS SUPPOSED TO IGNORE SO IT CAN ONLY CHANGE DIRECTION FROM OTHER LAYERS LIKE THE TILEMAP DETECTION
-            // MAKE THE FUNCTION IGNORE THE LAYER THAT THE SNAKE IS SUPPOSED TO IGNORE SO IT CAN ONLY CHANGE DIRECTION FROM OTHER LAYERS LIKE THE TILEMAP DETECTION
-            // MAKE THE FUNCTION IGNORE THE LAYER THAT THE SNAKE IS SUPPOSED TO IGNORE SO IT CAN ONLY CHANGE DIRECTION FROM OTHER LAYERS LIKE THE TILEMAP DETECTION
-            // MAKE THE FUNCTION IGNORE THE LAYER THAT THE SNAKE IS SUPPOSED TO IGNORE SO IT CAN ONLY CHANGE DIRECTION FROM OTHER LAYERS LIKE THE TILEMAP DETECTION
-            // MAKE THE FUNCTION IGNORE THE LAYER THAT THE SNAKE IS SUPPOSED TO IGNORE SO IT CAN ONLY CHANGE DIRECTION FROM OTHER LAYERS LIKE THE TILEMAP DETECTION
-            // MAKE THE FUNCTION IGNORE THE LAYER THAT THE SNAKE IS SUPPOSED TO IGNORE SO IT CAN ONLY CHANGE DIRECTION FROM OTHER LAYERS LIKE THE TILEMAP DETECTION
-            // MAKE THE FUNCTION IGNORE THE LAYER THAT THE SNAKE IS SUPPOSED TO IGNORE SO IT CAN ONLY CHANGE DIRECTION FROM OTHER LAYERS LIKE THE TILEMAP DETECTION
-            // MAKE THE FUNCTION IGNORE THE LAYER THAT THE SNAKE IS SUPPOSED TO IGNORE SO IT CAN ONLY CHANGE DIRECTION FROM OTHER LAYERS LIKE THE TILEMAP DETECTION
-            // MAKE THE FUNCTION IGNORE THE LAYER THAT THE SNAKE IS SUPPOSED TO IGNORE SO IT CAN ONLY CHANGE DIRECTION FROM OTHER LAYERS LIKE THE TILEMAP DETECTION
-            // MAKE THE FUNCTION IGNORE THE LAYER THAT THE SNAKE IS SUPPOSED TO IGNORE SO IT CAN ONLY CHANGE DIRECTION FROM OTHER LAYERS LIKE THE TILEMAP DETECTION
-
-            if (gameObjectCheck.layer == layerMask.value)
-            {
-                return false; 
-            }
+            return false;
         }
 
         return true;
@@ -63,6 +55,8 @@ public class Snake : MonoBehaviour
     void Update()
     {
         HandleMovement();
+        HandleFlipMovementCooldown();
+
         HandleWallColliders();
         HandleGroundColliders();
     }
@@ -89,6 +83,21 @@ public class Snake : MonoBehaviour
         }
     }
 
+    void HandleFlipMovementCooldown()
+    {
+        // If the cooldown is under the maximum time delay, add some to it
+        if (currentFlipMovementDirectionCooldown < flipMovementDirectionTimeDelay)
+        {
+            currentFlipMovementDirectionCooldown += Time.deltaTime;
+        }
+    }
+
+    bool IsFlipMovementDirectionCooldownOver()
+    {
+        if (currentFlipMovementDirectionCooldown >= flipMovementDirectionTimeDelay) return true;
+        return false;
+    }
+
 
     // Used to detect if the snake is colliding with a wall and reverse its movement to the other direciton
     void HandleWallColliders()
@@ -105,9 +114,14 @@ public class Snake : MonoBehaviour
         {
             foreach (GameObject colliderGameObject in collidingGameObjects)
             {
+                // If the game object detected is allowed for the snake to check for collisions
                 if (CheckGameObjectLayerIsAllowed(colliderGameObject))
                 {
-                    FlipMovementDirection();
+                    // If the snake is allowed to change its movement direction due to a cooldown
+                    if (IsFlipMovementDirectionCooldownOver())
+                    {
+                        FlipMovementDirection();
+                    }
                 }
             }
         }
@@ -121,6 +135,28 @@ public class Snake : MonoBehaviour
         // Update the colliders location
         leftFootCollider = new Vector3(transform.position.x - circleCollider.radius, transform.position.y - circleCollider.radius, transform.position.z);
         rightFootCollider = new Vector3(transform.position.x + circleCollider.radius, transform.position.y - circleCollider.radius, transform.position.z);
+
+        Collider2D[] colliderA = Physics2D.OverlapCircleAll(leftFootCollider, groundCheckDetection);
+        Collider2D[] colliderB = Physics2D.OverlapCircleAll(rightFootCollider, groundCheckDetection);
+
+        // Check if either of the colliders on the ground aren't touching any object (floating in air by themselves/hanging off platform/map)
+        if (colliderA.Length == 0 || colliderB.Length == 0)
+        {
+            // Loop through the game objects colliding with the feet colliders (should return an empty list)
+            List<GameObject> collidingGameObjects = AreEitherCoordsTouchingColliders(leftFootCollider, rightFootCollider);
+            foreach (GameObject colliderGameObject in collidingGameObjects)
+            {
+                // If the game object detected is allowed for the snake to check for collisions
+                if (CheckGameObjectLayerIsAllowed(colliderGameObject))
+                {
+                    // If the snake is allowed to change its movement direction due to a cooldown
+                    if (IsFlipMovementDirectionCooldownOver())
+                    {
+                        FlipMovementDirection();
+                    }
+                }
+            }
+        }
     }
 
     List<GameObject> AreEitherCoordsTouchingColliders(Vector3 vectorA, Vector3 vectorB)
@@ -174,6 +210,8 @@ public class Snake : MonoBehaviour
         {
             movingDirection = MovingDirection.Left;
         }
+
+        currentFlipMovementDirectionCooldown = 0.0f; // Reset the flip movement direction cooldown timer to the beginning
     }
 
     // Roate the snakes's sprite depending on its moving direction

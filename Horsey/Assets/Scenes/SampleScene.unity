@@ -2529,7 +2529,11 @@ PrefabInstance:
       value: Snake
       objectReference: {fileID: 0}
     - target: {fileID: 6225790078319466490, guid: 7a0f2fc2bf404dc468abdbf2b43ba8d3, type: 3}
-      propertyPath: layersToIgnore.Array.data[0].m_Bits
+      propertyPath: moveSpeed
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6225790078319466490, guid: 7a0f2fc2bf404dc468abdbf2b43ba8d3, type: 3}
+      propertyPath: layersToIgnore.m_Bits
       value: 128
       objectReference: {fileID: 0}
     m_RemovedComponents: []

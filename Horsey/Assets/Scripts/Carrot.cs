@@ -27,10 +27,6 @@ public class Carrot : MonoBehaviour
 
         upPosition = new Vector3(startPosition.x, startPosition.y + bounceAmount, startPosition.z);
         downPosition = new Vector3(startPosition.x, startPosition.y - bounceAmount, startPosition.z);
-
-        print("start pos: " + startPosition);
-        print("upPosition: " + upPosition);
-        print("downPosition: " + downPosition);
     }
 
     void Update()
