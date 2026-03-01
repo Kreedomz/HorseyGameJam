@@ -130,11 +130,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   layersToIgnore:
-  - serializedVersion: 2
+    serializedVersion: 2
     m_Bits: 128
   groundCheckDetection: 0.15
   movingDirection: 0
-  moveSpeed: 2.5
+  moveSpeed: 2
+  flipMovementDirectionTimeDelay: 0.25
 --- !u!58 &6988288194471909705
 CircleCollider2D:
   m_ObjectHideFlags: 0

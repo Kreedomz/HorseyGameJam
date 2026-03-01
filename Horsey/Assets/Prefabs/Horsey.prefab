@@ -129,7 +129,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a1f015e9e6ad3f42ad91140a4d360a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentStamina: 5
+  currentStamina: 100
   drainStaminaPerSecond: 1
   moveSpeed: 5
   jumpSpeed: 7.5

@@ -162,9 +162,20 @@ public class Player : MonoBehaviour
         return false;
     }
 
-    private void OnDrawGizmos()
+    private void OnCollisionEnter2D(Collision2D collision)
     {
-        RenderGroundCheck();
+        // Check if the player/horse collides with another object, in this case (an enemy = snake)
+        if (collision.gameObject.GetComponent<Snake>() != null)
+        {
+            Snake snake = collision.gameObject.GetComponent<Snake>();
+
+            // Check if the horse/player's legs is on top of the snake when the collision has happened
+            Vector3 underPlayer = new Vector3(transform.position.x, transform.position.y - circleCollider.radius, 0.0f);
+            if (underPlayer.y > snake.transform.position.y)
+            {
+                Destroy(snake.gameObject);
+            }
+        }
     }
 
     void RenderGroundCheck()
@@ -180,4 +191,10 @@ public class Player : MonoBehaviour
         Gizmos.DrawWireSphere(rightFoot, groundCheckRadius);
         Gizmos.DrawWireSphere(underPlayer, groundCheckRadius);
     }
+
+    private void OnDrawGizmos()
+    {
+        RenderGroundCheck();
+    }
+
 }

@@ -30,9 +30,6 @@ public class Snake : MonoBehaviour
 
     CircleCollider2D circleCollider;
 
-
-
-
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
