@@ -9,7 +9,7 @@ public class Carrot : MonoBehaviour
     }
 
     [Header("Carrot Settings")]
-    [SerializeField] int staminaToGive = 20; // How much stamina the player will regain when picked up
+    [SerializeField] float staminaToGive = 20.0f; // How much stamina the player will regain when picked up
 
     [Header("Bounce Settings")]
     [SerializeField] BounceState bounceState = BounceState.Up;

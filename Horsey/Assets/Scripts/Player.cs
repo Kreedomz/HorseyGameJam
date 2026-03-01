@@ -1,17 +1,20 @@
-using NUnit.Framework.Internal.Filters;
 using System.Collections;
 using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    const int MIN_STAMINA = 0;
-    const int MAX_STAMINA = 100;
+    public const float MIN_STAMINA = 0.0f;
+    public const float MAX_STAMINA = 100.0f;
+
+    [Header("Camera Settings")]
+    [SerializeField] Transform cameraTransform; // The camera which will follow the player
+    [SerializeField] bool followCameraY = true; // If the camera should follow the vertical position of the player
 
     [Header("Stamina Settings")]
     // Set the stamina of the player to the max on game start
-    [SerializeField] int currentStamina = MAX_STAMINA;
+    [SerializeField] float currentStamina = MAX_STAMINA;
     // How much player stamina is drained per second
-    [SerializeField] int drainStaminaPerSecond = 1;
+    [SerializeField] float drainStaminaPerSecond = 1.0f;
 
     [Header("Movement Settings")]
     [SerializeField] float moveSpeed = 5.0f;
@@ -43,6 +46,8 @@ public class Player : MonoBehaviour
     {
         HandleMovement();
         HandleJumping();
+
+        CameraFollow();
     }
 
     void HandleMovement()
@@ -80,11 +85,28 @@ public class Player : MonoBehaviour
         }
     }
 
+    void CameraFollow()
+    {
+        if (cameraTransform == null) return;
+
+        if (followCameraY)
+        {
+            Vector3 followVector = new Vector3(transform.position.x, transform.position.y, cameraTransform.position.z);
+            cameraTransform.position = followVector;
+
+        }
+        else
+        {
+            Vector3 followVector = new Vector3(transform.position.x, cameraTransform.position.y, cameraTransform.position.z);
+            cameraTransform.position = followVector;
+        }
+    }
+
     IEnumerator DrainStamina()
     {
         while (currentStamina > MIN_STAMINA)
         {
-            int staminaAfterDrain = currentStamina - drainStaminaPerSecond;
+            float staminaAfterDrain = currentStamina - drainStaminaPerSecond;
 
             if (staminaAfterDrain > MIN_STAMINA)
             {
@@ -120,9 +142,9 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void GiveStamina(int staminaToGive)
+    public void GiveStamina(float staminaToGive)
     {
-        int totalAmountAfterAddition = currentStamina + staminaToGive;
+        float totalAmountAfterAddition = currentStamina + staminaToGive;
 
         // Check if we exceed the player's max limit of stamina allowed
         if (totalAmountAfterAddition > MAX_STAMINA)
@@ -195,6 +217,11 @@ public class Player : MonoBehaviour
     private void OnDrawGizmos()
     {
         RenderGroundCheck();
+    }
+
+    public float GetStamina()
+    {
+        return currentStamina;
     }
 
 }
