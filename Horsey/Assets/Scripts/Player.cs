@@ -16,6 +16,8 @@ public class Player : MonoBehaviour
     // How much player stamina is drained per second
     [SerializeField] float drainStaminaPerSecond = 1.0f;
     [SerializeField] float jumpingStaminaDrain = 5.0f; // How much stamina to drain when player jumps
+    [Header("Combat Settings")]
+    [SerializeField] float snakeStaminaDamage = 10.0f; // How much stamina player loses when hitting a snake  
 
     [Header("Movement Settings")]
     [SerializeField] float moveSpeed = 5.0f;
@@ -215,28 +217,37 @@ public class Player : MonoBehaviour
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
+  {
+    // If we hit an object tagged "Win", show game over panel
+    if (collision.gameObject.CompareTag("Win"))
     {
-        // If we hit an object tagged "Win", show game over panel
-        if (collision.gameObject.CompareTag("Win"))
+        TriggerGameOver();
+        Destroy(collision.gameObject);
+        return;
+    }
+
+    Snake snake = collision.gameObject.GetComponent<Snake>();
+    if (snake != null)
+    {
+        // Check if player landed on top of the snake (stomp logic)
+        Vector3 underPlayer = new Vector3(transform.position.x, transform.position.y - circleCollider.radius, 0.0f);
+
+        if (underPlayer.y > snake.transform.position.y)
         {
-            TriggerGameOver();
-            Destroy(collision.gameObject);
-            return;
+            // Player stomped snake → destroy snake
+            Destroy(snake.gameObject);
         }
-
-        // Check if the player/horse collides with another object, in this case (an enemy = snake)
-        if (collision.gameObject.GetComponent<Snake>() != null)
+        else
         {
-            Snake snake = collision.gameObject.GetComponent<Snake>();
+            // Player hit snake from side/bottom → lose stamina
+            currentStamina -= snakeStaminaDamage;
 
-            // Check if the horse/player's legs is on top of the snake when the collision has happened
-            Vector3 underPlayer = new Vector3(transform.position.x, transform.position.y - circleCollider.radius, 0.0f);
-            if (underPlayer.y > snake.transform.position.y)
-            {
-                Destroy(snake.gameObject);
-            }
+            // Optional: clamp to minimum
+            if (currentStamina < MIN_STAMINA)
+                currentStamina = MIN_STAMINA;
         }
     }
+}
 
     void RenderGroundCheck()
     {
