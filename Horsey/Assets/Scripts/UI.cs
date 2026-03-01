@@ -30,6 +30,6 @@ public class UI : MonoBehaviour
 
     void UpdatePlayerStaminaText()
     {
-        staminaText.text = player.GetStamina().ToString() + "/" + Player.MAX_STAMINA.ToString();
+        staminaText.text = player.GetStamina().ToString("F0") + "/" + Player.MAX_STAMINA.ToString();
     }
 }

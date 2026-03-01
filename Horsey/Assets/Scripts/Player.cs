@@ -93,7 +93,6 @@ public class Player : MonoBehaviour
         {
             Vector3 followVector = new Vector3(transform.position.x, transform.position.y, cameraTransform.position.z);
             cameraTransform.position = followVector;
-
         }
         else
         {
@@ -110,7 +109,7 @@ public class Player : MonoBehaviour
 
             if (staminaAfterDrain > MIN_STAMINA)
             {
-                currentStamina -= drainStaminaPerSecond;
+                currentStamina -= drainStaminaPerSecond * Time.deltaTime;
             }
             else
             {
@@ -119,7 +118,7 @@ public class Player : MonoBehaviour
 
 
             // Wait for a couple seconds
-            yield return new WaitForSeconds(drainStaminaPerSecond);
+            yield return new WaitForEndOfFrame();
         }
 
         yield return null;
